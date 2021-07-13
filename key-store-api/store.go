@@ -33,7 +33,7 @@ func Get(key string) (string, error) {
 }
 
 func Delete(key string) error {
-	store.RLock()
+	store.Lock()
 	delete(store.m, key)
 	store.Unlock()
 
