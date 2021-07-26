@@ -1,12 +1,14 @@
-package main
+package db
 
 import (
+	"example/cloud-app/store/db"
 	"testing"
 
 	"errors"
 )
 
 func TestPut(t *testing.T) {
+	store := NewKVStoreLocal()
 	const key = "create-key"
 	const value = "create-value"
 
@@ -22,7 +24,7 @@ func TestPut(t *testing.T) {
 	}
 
 	// err should be nil
-	err := Put(key, value)
+	err := store.Put(key, value)
 	if err != nil {
 		t.Error(err)
 	}
@@ -38,6 +40,7 @@ func TestPut(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
+	store := NewKVStoreLocal()
 	const key = "read-key"
 	const value = "read-value"
 
@@ -47,17 +50,17 @@ func TestGet(t *testing.T) {
 	defer delete(store.m, key)
 
 	// Read a non-thing
-	val, err = Get(key)
+	val, err = store.Get(key)
 	if err == nil {
 		t.Error("expected an error")
 	}
-	if !errors.Is(err, ErrorNoSuchKey) {
+	if !errors.Is(err, db.ErrorNoSuchKey) {
 		t.Error("unexpected error:", err)
 	}
 
 	store.m[key] = value
 
-	val, err = Get(key)
+	val, err = store.Get(key)
 	if err != nil {
 		t.Error("unexpected error:", err)
 	}
@@ -68,6 +71,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	store := NewKVStoreLocal()
 	const key = "delete-key"
 	const value = "delete-value"
 
@@ -82,7 +86,7 @@ func TestDelete(t *testing.T) {
 		t.Error("key/value doesn't exist")
 	}
 
-	Delete(key)
+	store.Delete(key)
 
 	_, contains = store.m[key]
 	if contains {
