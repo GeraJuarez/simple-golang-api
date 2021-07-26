@@ -1,7 +1,7 @@
-package db
+package repository
 
 import (
-	"example/cloud-app/store/db"
+	"example/cloud-app/store/usecase/repository"
 	"sync"
 )
 
@@ -10,8 +10,8 @@ type kvStoreLocal struct {
 	m map[string]string
 }
 
-func NewKVStoreLocal() kvStoreLocal {
-	return kvStoreLocal{m: make(map[string]string)}
+func NewKVStoreLocal() repository.KeyValStoreRepository {
+	return &kvStoreLocal{m: make(map[string]string)}
 }
 
 func (store *kvStoreLocal) Put(key string, value string) error {
@@ -28,7 +28,7 @@ func (store *kvStoreLocal) Get(key string) (string, error) {
 	store.RUnlock()
 
 	if !ok {
-		return "", db.ErrorNoSuchKey
+		return "", repository.ErrorNoSuchKey
 	}
 
 	return value, nil

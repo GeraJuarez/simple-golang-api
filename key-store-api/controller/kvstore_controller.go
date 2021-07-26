@@ -2,8 +2,8 @@ package controller
 
 import (
 	"errors"
-	"example/cloud-app/store/db"
-	"example/cloud-app/store/interactor"
+	"example/cloud-app/store/usecase/interactor"
+	"example/cloud-app/store/usecase/repository"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -28,7 +28,7 @@ func (c *kvStoreController) GetValue(w http.ResponseWriter, r *http.Request) {
 	key := vars["key"]
 
 	value, err := c.kvStoreInteractor.Get(key)
-	if errors.Is(err, db.ErrorNoSuchKey) {
+	if errors.Is(err, repository.ErrorNoSuchKey) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}

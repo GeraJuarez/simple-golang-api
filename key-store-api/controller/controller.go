@@ -1,6 +1,6 @@
 package controller
 
-import "example/cloud-app/store/interactor"
+import "example/cloud-app/store/usecase/interactor"
 
 type AppController struct {
 	KVStore KVStoreController

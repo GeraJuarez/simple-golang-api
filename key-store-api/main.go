@@ -2,9 +2,9 @@ package main
 
 import (
 	"example/cloud-app/store/controller"
-	db "example/cloud-app/store/db/local"
-	"example/cloud-app/store/interactor"
 	"example/cloud-app/store/router"
+	"example/cloud-app/store/usecase/interactor"
+	repository "example/cloud-app/store/usecase/repository/local"
 	"log"
 	"net/http"
 	"os"
@@ -57,8 +57,8 @@ func main() {
 
 	portEnv := os.Getenv(PORT)
 
-	datastore := db.NewKVStoreLocal()
-	r := router.Start(controller.New(interactor.NewKVStoreInteractor(&datastore)))
+	datastore := repository.NewKVStoreLocal()
+	r := router.Start(controller.New(interactor.NewKVStoreInteractor(datastore)))
 
 	//r.HandleFunc("/v1/{key}", keyValuePutHandler).Methods("PUT")
 	//r.HandleFunc("/v1/{key}", keyValueDeleteHandler).Methods("DELETE")

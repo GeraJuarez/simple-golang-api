@@ -1,14 +1,14 @@
-package db
+package repository
 
 import (
-	"example/cloud-app/store/db"
+	"example/cloud-app/store/usecase/repository"
 	"testing"
 
 	"errors"
 )
 
 func TestPut(t *testing.T) {
-	store := NewKVStoreLocal()
+	store := kvStoreLocal{m: make(map[string]string)}
 	const key = "create-key"
 	const value = "create-value"
 
@@ -40,7 +40,7 @@ func TestPut(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	store := NewKVStoreLocal()
+	store := kvStoreLocal{m: make(map[string]string)}
 	const key = "read-key"
 	const value = "read-value"
 
@@ -54,7 +54,7 @@ func TestGet(t *testing.T) {
 	if err == nil {
 		t.Error("expected an error")
 	}
-	if !errors.Is(err, db.ErrorNoSuchKey) {
+	if !errors.Is(err, repository.ErrorNoSuchKey) {
 		t.Error("unexpected error:", err)
 	}
 
@@ -71,7 +71,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	store := NewKVStoreLocal()
+	store := kvStoreLocal{m: make(map[string]string)}
 	const key = "delete-key"
 	const value = "delete-value"
 

@@ -1,16 +1,16 @@
 package interactor
 
-import "example/cloud-app/store/db"
+import "example/cloud-app/store/usecase/repository"
 
 type kvStoreInteractor struct {
-	data db.KeyValStoreRepository
+	data repository.KeyValStoreRepository
 }
 
 type KVStoreInteractor interface {
 	Get(key string) (string, error)
 }
 
-func NewKVStoreInteractor(r db.KeyValStoreRepository) KVStoreInteractor {
+func NewKVStoreInteractor(r repository.KeyValStoreRepository) KVStoreInteractor {
 	return &kvStoreInteractor{r}
 }
 
