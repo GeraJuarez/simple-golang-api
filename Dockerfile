@@ -2,7 +2,8 @@
 FROM golang:1.16 as test
 COPY . /src
 WORKDIR /src
-RUN go test -v
+RUN go mod download
+RUN go test ./...
 
 # Build stage
 FROM golang:1.16 as build
