@@ -11,7 +11,9 @@ func Start(c controller.AppController) *mux.Router {
 	api := router.PathPrefix("/api").Subrouter()
 	kvstore_v1 := api.PathPrefix("/v1/kvstore").Subrouter()
 
+	kvstore_v1.HandleFunc("/{key}", c.KVStore.PutValue).Methods("PUT")
 	kvstore_v1.HandleFunc("/{key}", c.KVStore.GetValue).Methods("GET")
+	kvstore_v1.HandleFunc("/{key}", c.KVStore.DeleteValue).Methods("DELETE")
 
 	return router
 }
