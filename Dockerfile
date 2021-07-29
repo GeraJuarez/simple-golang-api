@@ -15,6 +15,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o kvs
 # Copy binary to container
 FROM scratch
 COPY --from=build /src/kvs .
+COPY --from=build /src/.env .
 # COPY *.pem .s
 EXPOSE 8080
 CMD ["/kvs"]
