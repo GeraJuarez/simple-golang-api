@@ -17,3 +17,7 @@ func (r *registry) NewKVStoreInteractor() interactor.KVStoreInteractor {
 func (r *registry) NewKVStoreRepository() repository.KeyValStoreRepository {
 	return r.kvstore_repo
 }
+
+func (r *registry) NewKVStoreControllerV2() controller.KVStoreController {
+	return controller.NewKVStoreControllerV2(r.NewKVStoreInteractor())
+}

@@ -19,6 +19,7 @@ func NewRegistry(kvstore_repo repository.KeyValStoreRepository) Registry {
 
 func (r *registry) NewAppController() controller.AppController {
 	return controller.AppController{
-		KVStore: r.NewKVStoreController(),
+		KVStore:   r.NewKVStoreController(),
+		KVStoreV2: r.NewKVStoreControllerV2(),
 	}
 }

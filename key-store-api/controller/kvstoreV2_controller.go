@@ -9,15 +9,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type kvStoreController struct {
+type kvStoreControllerV2 struct {
 	kvStoreInteractor interactor.KVStoreInteractor
 }
 
-func NewKVStoreController(interactor interactor.KVStoreInteractor) KVStoreController {
-	return &kvStoreController{interactor}
+func NewKVStoreControllerV2(interactor interactor.KVStoreInteractor) KVStoreController {
+	return &kvStoreControllerV2{interactor}
 }
 
-func (c *kvStoreController) PutValue(w http.ResponseWriter, r *http.Request) {
+func (c *kvStoreControllerV2) PutValue(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["key"]
 
@@ -38,7 +38,8 @@ func (c *kvStoreController) PutValue(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (c *kvStoreController) GetValue(w http.ResponseWriter, r *http.Request) {
+func (c *kvStoreControllerV2) GetValue(w http.ResponseWriter, r *http.Request) {
+	// readjson
 	vars := mux.Vars(r)
 	key := vars["key"]
 
@@ -55,7 +56,7 @@ func (c *kvStoreController) GetValue(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(value))
 }
 
-func (c *kvStoreController) DeleteValue(w http.ResponseWriter, r *http.Request) {
+func (c *kvStoreControllerV2) DeleteValue(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["key"]
 
