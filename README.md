@@ -20,6 +20,7 @@ Using [manato's article: Clean Architecture with GO](https://medium.com/manato/c
 * document API
 * input validation in all layers
 * DB seeder
+* gRPC
 
 
 # Usefull commands
