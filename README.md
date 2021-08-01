@@ -5,8 +5,6 @@ Using [manato's article: Clean Architecture with GO](https://medium.com/manato/c
 
 # TODO
 
-* add middleware
-* postman tests
 * v3 to practice concurrecy and channels
 * implement Cloud Native Patterns
 * utests and mocks

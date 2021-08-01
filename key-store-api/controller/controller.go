@@ -25,6 +25,8 @@ type KVStoreController interface {
 }
 
 func (app *AppController) EnforceJSONHandler(next http.Handler) http.Handler {
+	// TODO:
+	// should this be in a separate package?
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		contentType := r.Header.Get("Content-Type")
 
