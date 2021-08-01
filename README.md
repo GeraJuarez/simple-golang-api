@@ -1,15 +1,12 @@
 # simple-golang-api
 Golang API practice
 
-Using architecure from:
-https://manakuro.medium.com/clean-architecture-with-go-bce409427d31
+Using [manato's article: Clean Architecture with GO](https://medium.com/manato/clean-architecture-with-go-bce409427d31).
 
 # TODO
 
+* add middleware
 * postman tests
-* v2 using jsons and models
-* gracefull shutdown
-    * https://medium.com/@pinkudebnath/graceful-shutdown-of-golang-servers-using-context-and-os-signals-cc1fa2c55e97
 * v3 to practice concurrecy and channels
 * implement Cloud Native Patterns
 * utests and mocks

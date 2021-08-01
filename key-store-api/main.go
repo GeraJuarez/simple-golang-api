@@ -14,7 +14,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var PORT = "PORT"
+const (
+	PORT = "PORT"
+)
 
 func main() {
 	// We'll accept graceful shutdowns when quit via SIGINT (Ctrl+C)
