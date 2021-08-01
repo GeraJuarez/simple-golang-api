@@ -1,16 +1,16 @@
 package controller
 
 import (
+	"encoding/json"
 	"errors"
+	"example/cloud-app/store/model"
 	"example/cloud-app/store/usecase/interactor"
-	"io/ioutil"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 type kvStoreControllerV2 struct {
 	kvStoreInteractor interactor.KVStoreInteractor
+	// TODO: add input validator
 }
 
 func NewKVStoreControllerV2(interactor interactor.KVStoreInteractor) KVStoreController {
@@ -18,31 +18,55 @@ func NewKVStoreControllerV2(interactor interactor.KVStoreInteractor) KVStoreCont
 }
 
 func (c *kvStoreControllerV2) PutValue(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	key := vars["key"]
-
-	value, err := ioutil.ReadAll(r.Body)
+	var jsonKeyVal model.KeyVal
 	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	var unmarshalTypeErr *json.UnmarshalTypeError
+	if err := decoder.Decode(&jsonKeyVal); err != nil {
+		if errors.As(err, &unmarshalTypeErr) {
+			http.Error(w, "Bad Request. Wrong Type provided for field "+unmarshalTypeErr.Field, http.StatusBadRequest)
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
-	err = c.kvStoreInteractor.Put(key, string(value))
+	key := jsonKeyVal.Key
+	value := jsonKeyVal.Value
+	err := c.kvStoreInteractor.Put(key, string(value))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
+	respValKey := &model.KeyVal{Key: key, Value: value}
+	w.Header().Set("Content-Type", "application/json")
+	enc := json.NewEncoder(w)
+	if err := enc.Encode(respValKey); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func (c *kvStoreControllerV2) GetValue(w http.ResponseWriter, r *http.Request) {
-	// readjson
-	vars := mux.Vars(r)
-	key := vars["key"]
+	var jsonKey model.Key
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 
+	var unmarshalTypeErr *json.UnmarshalTypeError
+	if err := decoder.Decode(&jsonKey); err != nil {
+		if errors.As(err, &unmarshalTypeErr) {
+			http.Error(w, "Bad Request. Wrong Type provided for field "+unmarshalTypeErr.Field, http.StatusBadRequest)
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+
+	key := jsonKey.Key
 	value, err := c.kvStoreInteractor.Get(key)
 	if errors.Is(err, interactor.ErrorKeyNotFound) {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -53,17 +77,36 @@ func (c *kvStoreControllerV2) GetValue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(value))
+	respValKey := &model.KeyVal{Key: key, Value: value}
+	w.Header().Set("Content-Type", "application/json")
+	enc := json.NewEncoder(w)
+	if err := enc.Encode(respValKey); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func (c *kvStoreControllerV2) DeleteValue(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	key := vars["key"]
+	var jsonKey model.Key
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 
+	var unmarshalTypeErr *json.UnmarshalTypeError
+	if err := decoder.Decode(&jsonKey); err != nil {
+		if errors.As(err, &unmarshalTypeErr) {
+			http.Error(w, "Bad Request. Wrong Type provided for field "+unmarshalTypeErr.Field, http.StatusBadRequest)
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+
+	key := jsonKey.Key
 	err := c.kvStoreInteractor.Delete(key)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.WriteHeader(http.StatusNoContent)
 }
