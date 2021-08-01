@@ -30,7 +30,7 @@ func main() {
 		cancel()
 	}()
 
-	if err := serve(ctx); err != nil {
+	if err := serve(ctx); err != nil && err != http.ErrServerClosed {
 		log.Printf("Failed to serve:%+v\n", err)
 	}
 }
@@ -58,8 +58,8 @@ func serve(ctx context.Context) error {
 
 	go func() {
 		// Run our server in a goroutine so that it doesn't block.
-		if err := srv.ListenAndServe(); err != nil {
-			log.Fatal(err)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen:%+s\n", err)
 		}
 	}()
 
@@ -76,8 +76,5 @@ func serve(ctx context.Context) error {
 	}
 	log.Printf("server exited properly")
 
-	if err == http.ErrServerClosed {
-		err = nil
-	}
 	return err
 }
