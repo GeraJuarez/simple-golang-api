@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: key-val-store
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: example/kvs:latest
+        ports:
+          - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: key-val-store
+  labels:
+    app: backend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: key-val-store
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    app: backend
