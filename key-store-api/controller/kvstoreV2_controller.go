@@ -110,3 +110,19 @@ func (c *kvStoreControllerV2) DeleteValue(w http.ResponseWriter, r *http.Request
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (c *kvStoreControllerV2) GetValues(w http.ResponseWriter, r *http.Request) {
+	values, err := c.kvStoreInteractor.GetAllVal()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	respValKey := &model.Values{Array: values}
+	w.Header().Set("Content-Type", "application/json")
+	enc := json.NewEncoder(w)
+	if err := enc.Encode(respValKey); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}

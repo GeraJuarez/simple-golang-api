@@ -22,6 +22,7 @@ type KVStoreController interface {
 	GetValue(w http.ResponseWriter, r *http.Request)
 	PutValue(w http.ResponseWriter, r *http.Request)
 	DeleteValue(w http.ResponseWriter, r *http.Request)
+	GetValues(w http.ResponseWriter, r *http.Request)
 }
 
 func (app *AppController) EnforceJSONHandler(next http.Handler) http.Handler {

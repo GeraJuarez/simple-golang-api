@@ -6,13 +6,12 @@ Using [manato's article: Clean Architecture with GO](https://medium.com/manato/c
 
 ## TODO
 
-* v3 to practice concurrecy and channels
-* implement Cloud Native Patterns
+* WIP implement Cloud Native Patterns and concurrency Patterns
 * utests and mocks
     * https://pkg.go.dev/github.com/gorilla/mux#readme-testing-handlers
 * Add file logger
-* implement more patterns from Cloud Native Go book
 * gRPC
+* test kubernetes in aws or google cloud
 * env file best practices
 * use oauth
 * add https security

@@ -8,3 +8,7 @@ type KeyVal struct {
 type Key struct {
 	Key string `json:"key"`
 }
+
+type Values struct {
+	Array []string `json:"values"`
+}

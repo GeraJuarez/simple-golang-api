@@ -66,3 +66,13 @@ func (c *kvStoreController) DeleteValue(w http.ResponseWriter, r *http.Request) 
 	}
 
 }
+
+func (c *kvStoreController) GetValues(w http.ResponseWriter, r *http.Request) {
+	// TODO:
+	// If I have to do this for every new method, I may have something wrong
+	// Options:
+	// Remove outdated versions
+	// have all controller versions inside the same controller,
+	//// but this will have the KVStoreController interface with a lot of methods declared
+	w.WriteHeader(http.StatusNotImplemented)
+}

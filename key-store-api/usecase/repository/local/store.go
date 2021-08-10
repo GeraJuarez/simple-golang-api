@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"example/cloud-app/store/patterns/concurrency"
 	"example/cloud-app/store/usecase/repository"
 	"sync"
 )
@@ -40,4 +41,25 @@ func (store *kvStoreLocal) Delete(key string) error {
 	store.Unlock()
 
 	return nil
+}
+
+func (store *kvStoreLocal) FindAllValues() (<-chan string, error) {
+	source := make(chan string)
+	dests := concurrency.Split(source, 5)
+
+	go func() {
+		store.RLock()
+		for _, value := range store.m {
+			source <- value
+		}
+		store.RUnlock()
+		close(source)
+	}()
+
+	// do somehing useful here for slice "dests"
+	// this is just for practice
+
+	newDest := concurrency.Funnel(dests...)
+
+	return newDest, nil
 }

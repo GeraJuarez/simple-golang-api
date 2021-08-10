@@ -15,6 +15,7 @@ type KVStoreInteractor interface {
 	Put(key string, value string) error
 	Get(key string) (string, error)
 	Delete(key string) error
+	GetAllVal() ([]string, error)
 	// NOTE:
 	// Methods named same as the controller
 	// Business rules are appled in this layer
@@ -52,4 +53,23 @@ func (kvstore *kvStoreInteractor) Delete(key string) error {
 	err := kvstore.repo.Delete(key)
 
 	return err
+}
+
+func (kvstore *kvStoreInteractor) GetAllVal() ([]string, error) {
+	chanVal, err := kvstore.repo.FindAllValues()
+	values := []string{}
+
+	// maybe is better to apply here the Fan-in pattern here (Funnel function)
+	for val := range chanVal {
+		values = append(values, val)
+	}
+
+	if errors.Is(err, repository.ErrorNoSuchKey) {
+		return nil, ErrorKeyNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return values, nil
 }
